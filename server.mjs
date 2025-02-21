@@ -10,7 +10,7 @@ const DATA_URL = 'https://foyzulhassan.github.io/files/favs.json';
 // Fetch the JSON data from the URL
 async function fetchData() {
     const response = await axios.get(DATA_URL, { transformResponse: data => JSONbig.parse(data) });
-    return response.data;
+    return response.data; // Return parsed JSON data
 }
 
 // Get all tweets (create time, id, and text)
@@ -36,8 +36,8 @@ app.get('/tweets/links', async (req, res) => {
 
         const linksByTweet = data.reduce((acc, tweet) => {
             if (tweet.text) {
-                const links = tweet.text.match(urlRegex) || [];
-                if (links.length) acc[tweet.id.toString()] = links;
+                const links = tweet.text.match(urlRegex) || []; // Find all links in tweet text
+                if (links.length) acc[tweet.id.toString()] = links; // Store links by tweet ID
             }
             return acc;
         }, {});
@@ -53,7 +53,7 @@ app.get('/tweets/links', async (req, res) => {
 app.get('/tweets/:id', async (req, res) => {
     try {
         const data = await fetchData();
-        const tweet = data.find(t => t.id == req.params.id);
+        const tweet = data.find(t => t.id == req.params.id);  // Find tweet by ID
         if (tweet) {
             res.json({
                 created_at: tweet.created_at,
@@ -72,7 +72,7 @@ app.get('/tweets/:id', async (req, res) => {
 app.get('/user/:screen_name', async (req, res) => {
     try {
         const data = await fetchData();
-        const tweet = data.find(t => t.user.screen_name === req.params.screen_name);
+        const tweet = data.find(t => t.user.screen_name === req.params.screen_name); // Find tweet by username
         if (tweet) {
             res.json({
                 location: tweet.user.location,
